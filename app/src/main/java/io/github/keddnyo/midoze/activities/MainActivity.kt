@@ -24,6 +24,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,10 +69,22 @@ class MainActivity : AppCompatActivity() {
                         getDeviceFirmwareLatestJson()
                     }
                 }
+
+                val deviceListJsonArray = HashMap<Int, String>()
+                if (deviceListJson.keys().hasNext()) {
+                    deviceListJsonArray[i] = deviceListJson.keys().next()
+                }
+
                 val responseParamsArray = deviceListJson.toMap()
                 val keys = responseParamsArray.keys
 
                 for (i in keys) {
+                    deviceListJsonArray.sortBy {
+                        deviceListJson.getJSONObject(i).getString("date")
+                    }
+
+                    deviceListJsonArray.get
+
                     val jsonObject = deviceListJson.getJSONObject(i)
 
                     val deviceNameValue = jsonObject.getString("name")
