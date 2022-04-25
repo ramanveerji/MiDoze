@@ -149,9 +149,10 @@ class DozeRequest {
             .build()
 
         return withContext(Dispatchers.IO) {
-            JSONObject(
+            val result = kotlin.runCatching {
                 OkHttpClient().newCall(request).execute().body()?.string().toString()
-            )
+            }.toString()
+            return@withContext JSONObject(result)
         }
     }
     fun getFirmwareFile(
