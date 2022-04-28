@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
+        /*if (android.os.Build.VERSION.SDK_INT >= 21) {
             setContentView(R.layout.activity_main)
             deviceListRecyclerView = findViewById(R.id.device_list_recycler_view)
             prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -60,7 +60,26 @@ class MainActivity : AppCompatActivity() {
             finish()
             startActivity(Intent(this, ExtrasRequestActivity::class.java))
             UiUtils().showToast(context, getString(R.string.compatibility_mode))
+        }*/
+
+        setContentView(R.layout.activity_main)
+        deviceListRecyclerView = findViewById(R.id.device_list_recycler_view)
+        prefs = PreferenceManager.getDefaultSharedPreferences(this)
+
+        UiUtils().switchDarkMode(this)
+
+        if (DozeRequest().isOnline(this)) {
+            getData(true)
+            getData(false)
+        } else {
+            title = getString(R.string.error_title)
         }
+
+        if (state != null) {
+            deviceListRecyclerView.layoutManager?.onRestoreInstanceState(state)
+        }
+
+        updateChecker()
     }
 
     private fun getData(favorite: Boolean) {

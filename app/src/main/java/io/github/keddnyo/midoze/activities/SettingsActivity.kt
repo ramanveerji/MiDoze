@@ -33,11 +33,11 @@ class SettingsActivity : AppCompatActivity() {
 
             requireActivity().title = getString(R.string.settings_title)
 
-            val customRequest = findPreference<Preference>("settings_custom_request")
+            val customRequest = findPreference("settings_custom_request")
 
-            val about = findPreference<Preference>("settings_app_info")
-            val cloud = findPreference<Preference>("settings_server_info")
-            val github = findPreference<Preference>("settings_app_github_page")
+            val about = findPreference("settings_app_info")
+            val cloud = findPreference("settings_server_info")
+            val github = findPreference("settings_app_github_page")
 
             if (customRequest != null && about != null && cloud != null && github != null) {
                 customRequest.setOnPreferenceClickListener {

@@ -8,8 +8,7 @@
             app:entryValues="@array/app_theme_entryValues"
             app:icon="@drawable/ic_dark_mode"
             app:key="settings_app_theme"
-            app:title="@string/settings_app_theme"
-            app:useSimpleSummaryProvider="true" />
+            app:title="@string/settings_app_theme" />
 
     </PreferenceCategory>
 
@@ -21,8 +20,7 @@
             app:entryValues="@array/request_host_selector_entryValues"
             app:icon="@drawable/ic_request_host"
             app:key="settings_request_host"
-            app:title="@string/settings_request_host"
-            app:useSimpleSummaryProvider="true" />
+            app:title="@string/settings_request_host" />
 
         <ListPreference
             app:defaultValue="1"
@@ -30,8 +28,7 @@
             app:entryValues="@array/request_region_selector_entryValues"
             app:icon="@drawable/ic_request_region"
             app:key="settings_request_region"
-            app:title="@string/settings_request_region"
-            app:useSimpleSummaryProvider="true" />
+            app:title="@string/settings_request_region" />
 
         <SwitchPreferenceCompat
             app:defaultValue="true"
