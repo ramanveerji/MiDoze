@@ -19,10 +19,7 @@ import io.github.keddnyo.midoze.activities.request.RequestActivity
 import io.github.keddnyo.midoze.databinding.ActivityMainBinding
 import io.github.keddnyo.midoze.fragments.FeedFragment
 import io.github.keddnyo.midoze.fragments.SettingsFragment
-import io.github.keddnyo.midoze.utils.DarkMode
-import io.github.keddnyo.midoze.utils.DozeRequest
-import io.github.keddnyo.midoze.utils.StringUtils
-import io.github.keddnyo.midoze.utils.UiUtils
+import io.github.keddnyo.midoze.utils.*
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
@@ -92,9 +89,9 @@ class MainActivity : AppCompatActivity() {
                 @Deprecated("Deprecated in Java")
                 override fun doInBackground(vararg p0: Void?): Void? {
                     if (prefs.getBoolean("settings_app_check_updates",
-                            true) && DozeRequest().getOnlineState(context)
+                            true) && MakeRequest().getOnlineState(context)
                     ) {
-                        releaseData = DozeRequest().getApplicationLatestReleaseInfo(context)
+                        releaseData = MakeRequest().getApplicationLatestReleaseInfo(context)
                     }
                     return null
                 }
@@ -121,8 +118,7 @@ class MainActivity : AppCompatActivity() {
                                     .setIcon(R.drawable.ic_info)
                                     .setCancelable(false)
                                 builder.setPositiveButton(R.string.update_dialog_button) { _: DialogInterface?, _: Int ->
-                                    DozeRequest().getFirmwareFile(context,
-                                        latestVersionLink,
+                                    Download(context).getFirmwareFile(latestVersionLink,
                                         getString(R.string.app_name))
                                     UiUtils().showToast(context,
                                         getString(R.string.downloading_toast))

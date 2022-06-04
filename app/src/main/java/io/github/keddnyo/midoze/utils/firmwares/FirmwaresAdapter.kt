@@ -14,7 +14,7 @@ import com.google.android.material.card.MaterialCardView
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.activities.main.FirmwareActivity
 import io.github.keddnyo.midoze.activities.request.RequestActivity
-import io.github.keddnyo.midoze.utils.DozeRequest
+import io.github.keddnyo.midoze.utils.MakeRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -74,7 +74,7 @@ class FirmwaresAdapter : RecyclerView.Adapter<FirmwaresAdapter.DeviceListViewHol
         }
 
         holder.downloadLayout.setOnClickListener {
-            when (DozeRequest().getOnlineState(holder.downloadLayout.context)) {
+            when (MakeRequest().getOnlineState(holder.downloadLayout.context)) {
                 true -> {
                     openFirmwareActivity(firmwaresDataArray[position].deviceIndex, holder.downloadLayout.context, false)
                 }
@@ -85,7 +85,7 @@ class FirmwaresAdapter : RecyclerView.Adapter<FirmwaresAdapter.DeviceListViewHol
         }
 
         holder.downloadLayout.setOnLongClickListener {
-            when (DozeRequest().getOnlineState(holder.downloadLayout.context)) {
+            when (MakeRequest().getOnlineState(holder.downloadLayout.context)) {
                 true -> {
                     openFirmwareActivity(firmwaresDataArray[position].deviceIndex, holder.downloadLayout.context, true)
                 }
@@ -138,7 +138,7 @@ class FirmwaresAdapter : RecyclerView.Adapter<FirmwaresAdapter.DeviceListViewHol
     private fun openFirmwareActivity(deviceIndex: Int, context: Context, custom: Boolean) {
         runBlocking {
             withContext(Dispatchers.IO) {
-                val jsonObject = JSONObject(DozeRequest().getApplicationValues())
+                val jsonObject = JSONObject(MakeRequest().getApplicationValues())
 
                 val deviceNameValue =
                     jsonObject.getJSONObject(deviceIndex.toString()).getString("name")

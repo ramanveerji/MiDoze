@@ -1,11 +1,11 @@
 package io.github.keddnyo.midoze.activities.request
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.utils.StringUtils
 import io.github.keddnyo.midoze.utils.UiUtils
@@ -48,7 +48,8 @@ class ResponseActivity : AppCompatActivity() {
                     type = "text/plain"
                 }
 
-                val shareIntent = Intent.createChooser(sendIntent, getString(R.string.settings_server_response))
+                val shareIntent =
+                    Intent.createChooser(sendIntent, getString(R.string.settings_server_response))
                 startActivity(shareIntent)
             }
         }

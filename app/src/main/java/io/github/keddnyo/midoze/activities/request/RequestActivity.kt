@@ -8,7 +8,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import io.github.keddnyo.midoze.R
-import io.github.keddnyo.midoze.utils.DozeRequest
+import io.github.keddnyo.midoze.utils.MakeRequest
 import io.github.keddnyo.midoze.utils.UiUtils
 import kotlinx.coroutines.runBlocking
 
@@ -21,11 +21,13 @@ class RequestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_request)
         title = getString(R.string.settings_custom_request)
 
-        val extrasDeviceSourceEditText: TextInputEditText = findViewById(R.id.extrasDeviceSourceEditText)
+        val extrasDeviceSourceEditText: TextInputEditText =
+            findViewById(R.id.extrasDeviceSourceEditText)
         val extrasProductionSourceEditText: TextInputEditText =
             findViewById(R.id.extrasProductionSourceEditText)
         val extrasAppNameEditText: TextInputEditText = findViewById(R.id.extrasAppNameEditText)
-        val extrasAppVersionEditText: TextInputEditText = findViewById(R.id.extrasAppVersionEditText)
+        val extrasAppVersionEditText: TextInputEditText =
+            findViewById(R.id.extrasAppVersionEditText)
         val submitButton: MaterialButton = findViewById(R.id.extrasSubmitButton)
         val importButton: MaterialButton = findViewById(R.id.extrasImportButton)
 
@@ -63,10 +65,10 @@ class RequestActivity : AppCompatActivity() {
         }
 
         submitButton.setOnClickListener {
-            if (DozeRequest().getOnlineState(context)) {
+            if (MakeRequest().getOnlineState(context)) {
                 val firmwareResponse =
                     runBlocking {
-                        DozeRequest().getFirmwareLinks(
+                        MakeRequest().getFirmwareLinks(
                             extrasProductionSourceEditText.text.toString(),
                             extrasDeviceSourceEditText.text.toString(),
                             extrasAppVersionEditText.text.toString(),
@@ -94,7 +96,8 @@ class RequestActivity : AppCompatActivity() {
         }
 
         importButton.setOnClickListener {
-            extrasProductionSourceEditText.setText(sharedPreferences.getString("productionSource", ""))
+            extrasProductionSourceEditText.setText(sharedPreferences.getString("productionSource",
+                ""))
             extrasDeviceSourceEditText.setText(sharedPreferences.getString("deviceSource", ""))
             extrasAppVersionEditText.setText(sharedPreferences.getString("appVersion", ""))
             extrasAppNameEditText.setText(sharedPreferences.getString("appname", ""))

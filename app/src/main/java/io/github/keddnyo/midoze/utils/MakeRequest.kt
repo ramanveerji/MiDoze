@@ -1,17 +1,10 @@
 package io.github.keddnyo.midoze.utils
 
-import android.Manifest
-import android.app.Activity
-import android.app.DownloadManager
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
-import android.os.Environment
-import android.webkit.URLUtil
-import androidx.core.app.ActivityCompat
 import androidx.preference.PreferenceManager
 import io.github.keddnyo.midoze.R
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +14,7 @@ import okhttp3.Request
 import org.json.JSONObject
 import java.net.URL
 
-class DozeRequest {
+class MakeRequest {
     fun getOnlineState(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -53,49 +46,27 @@ class DozeRequest {
         appVersion: String,
         appName: String,
         context: Context,
-    ): JSONObject {
+    ): JSONObject = with(context) {
         val prefs: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context)
 
         val country = when (prefs.getString("settings_request_region", "1")) {
-            "2" -> {
-                "CH"
-            }
-            "3" -> {
-                "RU"
-            }
-            "4" -> {
-                "AR"
-            }
-            else -> {
-                "US"
-            }
+            "2" -> "CH"
+            "3" -> "RU"
+            "4" -> "AR"
+            else -> "US"
         }
         val lang = when (prefs.getString("settings_request_region", "1")) {
-            "2" -> {
-                "zh_CH"
-            }
-            "3" -> {
-                "ru_RU"
-            }
-            "4" -> {
-                "ar_AR"
-            }
-            else -> {
-                "en_US"
-            }
+            "2" -> "zh_CH"
+            "3" -> "ru_RU"
+            "4" -> "ar_AR"
+            else -> "en_US"
         }
 
         val requestHost = when (prefs.getString("settings_request_host", "1")) {
-            "2" -> {
-                context.getString(R.string.request_host_second)
-            }
-            "3" -> {
-                context.getString(R.string.request_host_third)
-            }
-            else -> {
-                context.getString(R.string.request_host_first)
-            }
+            "2" -> getString(R.string.request_host_second)
+            "3" -> getString(R.string.request_host_third)
+            else -> getString(R.string.request_host_first)
         }
 
         val uriBuilder: Uri.Builder = Uri.Builder()
@@ -162,36 +133,4 @@ class DozeRequest {
         }
     }
 
-    fun getFirmwareFile(
-        context: Context,
-        fileUrl: String,
-        subName: String,
-    ) {
-        val permissionCheck = ActivityCompat.checkSelfPermission(
-            context,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                context as Activity,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                1
-            )
-        } else {
-            val downloadManager =
-                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-            val fileName = URLUtil.guessFileName(fileUrl, "?", "?")
-            val request = DownloadManager.Request(Uri.parse(fileUrl))
-
-            request.setTitle(fileName)
-            request.setNotificationVisibility(1)
-            request.setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_DOWNLOADS,
-                "${context.getString(R.string.app_name)}/$subName/$fileName"
-            )
-
-            downloadManager.enqueue(request)
-        }
-    }
 }

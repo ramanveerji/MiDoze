@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.github.keddnyo.midoze.R
-import io.github.keddnyo.midoze.utils.DozeRequest
+import io.github.keddnyo.midoze.utils.MakeRequest
 import io.github.keddnyo.midoze.utils.StringUtils
 import io.github.keddnyo.midoze.utils.UiUtils
 import io.github.keddnyo.midoze.utils.firmwares.FirmwaresAdapter
@@ -76,12 +76,12 @@ class FeedFragment : Fragment() {
             override fun doInBackground(vararg p0: Void?): Void? {
 
                 fun getOnlineState(): Boolean {
-                    return DozeRequest().getOnlineState(context)
+                    return MakeRequest().getOnlineState(context)
                 }
 
                 fun getFirmwaresData() {
                     if (getOnlineState()) {
-                        firmwaresData = DozeRequest().getFirmwareLatest()
+                        firmwaresData = MakeRequest().getFirmwareLatest()
                         editor.putString("Firmwares", firmwaresData.toString())
                         editor.apply()
                     } else {

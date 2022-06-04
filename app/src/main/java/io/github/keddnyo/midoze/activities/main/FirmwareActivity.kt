@@ -10,10 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import io.github.keddnyo.midoze.R
-import io.github.keddnyo.midoze.utils.DozeRequest
-import io.github.keddnyo.midoze.utils.Language
-import io.github.keddnyo.midoze.utils.StringUtils
-import io.github.keddnyo.midoze.utils.UiUtils
+import io.github.keddnyo.midoze.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -62,7 +59,7 @@ class FirmwareActivity : AppCompatActivity() {
         val appNameValue = intent.getStringExtra("appname").toString()
         val appVersionValue = intent.getStringExtra("appVersion").toString()
 
-        firmwareResponse = DozeRequest().getFirmwareLinks(
+        firmwareResponse = MakeRequest().getFirmwareLinks(
             productionSourceValue,
             deviceSourceValue,
             appVersionValue,
@@ -126,7 +123,7 @@ class FirmwareActivity : AppCompatActivity() {
         for (i in responseFirmwareTagsArray) {
             if (jsonObject.has(i)) {
                 val urlString = jsonObject.getString(i)
-                DozeRequest().getFirmwareFile(context, urlString, deviceName)
+                Download(context).getFirmwareFile(urlString, deviceName)
             }
         }
         UiUtils().showToast(context, getString(R.string.downloading_toast))
