@@ -32,16 +32,12 @@ class FeedFragment : Fragment() {
     private lateinit var prefs: SharedPreferences
     private var state: Parcelable? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_feed, container, false)
     }
 
@@ -80,7 +76,7 @@ class FeedFragment : Fragment() {
             override fun doInBackground(vararg p0: Void?): Void? {
 
                 fun getOnlineState(): Boolean {
-                    return DozeRequest().isOnline(context)
+                    return DozeRequest().getOnlineState(context)
                 }
 
                 fun getFirmwaresData() {
@@ -96,12 +92,8 @@ class FeedFragment : Fragment() {
                     }
                 }
 
-                if (prefs.getBoolean("settings_feed_cache_use", true)) {
-                    if (preloadedFirmwares != "") {
-                        firmwaresData = JSONObject(preloadedFirmwares)
-                    } else {
-                        getFirmwaresData()
-                    }
+                if (prefs.getBoolean("settings_feed_cache_use", true) && preloadedFirmwares != "") {
+                    firmwaresData = JSONObject(preloadedFirmwares)
                 } else {
                     getFirmwaresData()
                 }
@@ -187,9 +179,7 @@ class FeedFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            state = deviceListRecyclerView.layoutManager?.onSaveInstanceState()
-        }
+        state = deviceListRecyclerView.layoutManager?.onSaveInstanceState()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

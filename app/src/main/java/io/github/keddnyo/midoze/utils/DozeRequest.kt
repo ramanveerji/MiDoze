@@ -22,7 +22,7 @@ import org.json.JSONObject
 import java.net.URL
 
 class DozeRequest {
-    fun isOnline(context: Context): Boolean {
+    fun getOnlineState(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val info = connectivityManager.allNetworkInfo

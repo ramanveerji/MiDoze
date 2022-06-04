@@ -21,8 +21,6 @@ class RequestActivity : AppCompatActivity() {
         setContentView(R.layout.activity_request)
         title = getString(R.string.settings_custom_request)
 
-        UiUtils().switchDarkMode(this)
-
         val extrasDeviceSourceEditText: TextInputEditText = findViewById(R.id.extrasDeviceSourceEditText)
         val extrasProductionSourceEditText: TextInputEditText =
             findViewById(R.id.extrasProductionSourceEditText)
@@ -65,7 +63,7 @@ class RequestActivity : AppCompatActivity() {
         }
 
         submitButton.setOnClickListener {
-            if (DozeRequest().isOnline(context)) {
+            if (DozeRequest().getOnlineState(context)) {
                 val firmwareResponse =
                     runBlocking {
                         DozeRequest().getFirmwareLinks(

@@ -19,6 +19,7 @@ import io.github.keddnyo.midoze.activities.request.RequestActivity
 import io.github.keddnyo.midoze.databinding.ActivityMainBinding
 import io.github.keddnyo.midoze.fragments.FeedFragment
 import io.github.keddnyo.midoze.fragments.SettingsFragment
+import io.github.keddnyo.midoze.utils.DarkMode
 import io.github.keddnyo.midoze.utils.DozeRequest
 import io.github.keddnyo.midoze.utils.StringUtils
 import io.github.keddnyo.midoze.utils.UiUtils
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     val context = this@MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        UiUtils().switchDarkMode(context)
+        DarkMode(context).setDarkModeState()
         super.onCreate(savedInstanceState)
 
         if (android.os.Build.VERSION.SDK_INT >= 21) {
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 @Deprecated("Deprecated in Java")
                 override fun doInBackground(vararg p0: Void?): Void? {
                     if (prefs.getBoolean("settings_app_check_updates",
-                            true) && DozeRequest().isOnline(context)
+                            true) && DozeRequest().getOnlineState(context)
                     ) {
                         releaseData = DozeRequest().getApplicationLatestReleaseInfo(context)
                     }

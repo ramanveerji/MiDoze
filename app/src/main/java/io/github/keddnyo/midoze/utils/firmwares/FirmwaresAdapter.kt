@@ -74,7 +74,7 @@ class FirmwaresAdapter : RecyclerView.Adapter<FirmwaresAdapter.DeviceListViewHol
         }
 
         holder.downloadLayout.setOnClickListener {
-            when (DozeRequest().isOnline(holder.downloadLayout.context)) {
+            when (DozeRequest().getOnlineState(holder.downloadLayout.context)) {
                 true -> {
                     openFirmwareActivity(firmwaresDataArray[position].deviceIndex, holder.downloadLayout.context, false)
                 }
@@ -85,7 +85,7 @@ class FirmwaresAdapter : RecyclerView.Adapter<FirmwaresAdapter.DeviceListViewHol
         }
 
         holder.downloadLayout.setOnLongClickListener {
-            when (DozeRequest().isOnline(holder.downloadLayout.context)) {
+            when (DozeRequest().getOnlineState(holder.downloadLayout.context)) {
                 true -> {
                     openFirmwareActivity(firmwaresDataArray[position].deviceIndex, holder.downloadLayout.context, true)
                 }
