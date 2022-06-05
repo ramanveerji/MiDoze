@@ -1,41 +1,26 @@
 package io.github.keddnyo.midoze.utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.PreferenceManager
+import androidx.preference.PreferenceManager as PM
 import io.github.keddnyo.midoze.AppTheme
+import io.github.keddnyo.midoze.AppTheme.SETTING_DARK_MODE_NAME
 
 class AppTheme(context: Context) {
 
-    private val sharedPreferences: SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context)
+    private val sharedPreferences = PM.getDefaultSharedPreferences(context)
 
-    private val editor = sharedPreferences.edit()
+    private val isDarkMode = sharedPreferences.getBoolean(SETTING_DARK_MODE_NAME, false)
 
-    private val propertyName = "settings_dark_mode"
+    private val appThemeIndex = if (isDarkMode) AppTheme.MODE_NIGHT_YES else AppTheme.MODE_NIGHT_NO
 
-    private val darkModeValue = sharedPreferences.getBoolean(propertyName, false)
-
-    private fun setDarkModeValue(state: Boolean) {
-        editor.putBoolean(propertyName, state)
-        editor.apply()
-    }
-
-    private val appThemeIndex: Int =
-        if (darkModeValue) {
-            AppTheme.MODE_NIGHT_YES
-        } else {
-            AppTheme.MODE_NIGHT_NO
-        }
-
-    fun setDarkModeState() {
+    fun setTheme() {
         AppCompatDelegate.setDefaultNightMode(appThemeIndex)
     }
 
-    fun switchDarkModeState() {
-        setDarkModeValue(!darkModeValue)
-        AppCompatDelegate.setDefaultNightMode(appThemeIndex)
+    fun swapTheme() {
+        sharedPreferences.edit().putBoolean(SETTING_DARK_MODE_NAME, !isDarkMode).apply()
+        setTheme()
     }
 
 }

@@ -81,7 +81,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = with(requireActivity()) {
         when (item.itemId) {
             R.id.action_dark_mode -> {
-                AppTheme(requireActivity()).switchDarkModeState()
+                AppTheme(requireActivity()).swapTheme()
             }
             R.id.action_custom_request -> {
                 startActivity(Intent(requireContext(), RequestActivity::class.java))
