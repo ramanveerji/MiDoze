@@ -14,7 +14,7 @@ import androidx.preference.PreferenceManager
 import io.github.keddnyo.midoze.BuildConfig
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.activities.request.RequestActivity
-import io.github.keddnyo.midoze.utils.DarkMode
+import io.github.keddnyo.midoze.utils.AppTheme
 
 class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -81,7 +81,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean = with(requireActivity()) {
         when (item.itemId) {
             R.id.action_dark_mode -> {
-                DarkMode(requireActivity()).switchDarkModeState()
+                AppTheme(requireActivity()).switchDarkModeState()
             }
             R.id.action_custom_request -> {
                 startActivity(Intent(requireContext(), RequestActivity::class.java))
@@ -89,4 +89,5 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }

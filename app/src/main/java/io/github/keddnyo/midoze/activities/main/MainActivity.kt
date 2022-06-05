@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     val context = this@MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        DarkMode(context).setDarkModeState()
+        AppTheme(context).setDarkModeState()
         super.onCreate(savedInstanceState)
 
         if (android.os.Build.VERSION.SDK_INT >= 21) {

@@ -1,5 +1,6 @@
 package io.github.keddnyo.midoze.utils
 
+import android.annotation.SuppressLint
 import io.github.keddnyo.midoze.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -10,20 +11,30 @@ class StringUtils {
         R.string.settings_title
     )
 
-    fun getChangelogFixed(changeLog: String): String {
+    fun cleanChangelog(changeLog: String): String {
         var c = changeLog.substringBefore('#')
         c = c.replace(";", "")
         return c
     }
 
-    fun getExtrasFixed(string: String): String {
+    fun cleanResponse(string: String): String {
         return string.replace("\\/", "/")
     }
 
-    fun getLocaleFirmwareDate(firmwareDate: String): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Language().getCurrent())
-        val firmwareDateFormatted = dateFormat.parse(firmwareDate)
-        return DateFormat.getDateInstance(DateFormat.MEDIUM, Language().getCurrent())
-            .format(firmwareDateFormatted!!)
+    @SuppressLint("SimpleDateFormat")
+    fun getLocalFirmwareDate(firmwareDateString: String): String = with(Language().getCurrent()) {
+
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd")
+        val outputFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, this)
+
+        val inputDate = inputFormat.parse(firmwareDateString)
+
+        val outputDate = if (inputDate != null) {
+            outputFormat.format(inputDate)
+        } else {
+            ""
+        }
+
+        return outputDate
     }
 }

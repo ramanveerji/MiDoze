@@ -19,15 +19,15 @@ import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.utils.MakeRequest
 import io.github.keddnyo.midoze.utils.StringUtils
 import io.github.keddnyo.midoze.utils.UiUtils
-import io.github.keddnyo.midoze.utils.firmwares.FirmwaresAdapter
-import io.github.keddnyo.midoze.utils.firmwares.FirmwaresData
+import io.github.keddnyo.midoze.fragments.feed.FeedAdapter
+import io.github.keddnyo.midoze.fragments.feed.FeedData
 import org.json.JSONArray
 import org.json.JSONObject
 
 class FeedFragment : Fragment() {
 
     private val deviceListIndex = hashMapOf<String, Int>()
-    private val firmwaresAdapter = FirmwaresAdapter()
+    private val feedAdapter = FeedAdapter()
     private lateinit var deviceListRecyclerView: RecyclerView
     private lateinit var prefs: SharedPreferences
     private var state: Parcelable? = null
@@ -54,7 +54,7 @@ class FeedFragment : Fragment() {
         deviceListRecyclerView.layoutManager =
             GridLayoutManager(this, UiUtils().getGridLayoutIndex(this, 400))
 
-        val adapter = firmwaresAdapter
+        val adapter = feedAdapter
         deviceListRecyclerView.adapter = adapter
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -129,14 +129,14 @@ class FeedFragment : Fragment() {
                             }
                             val firmwareVersionValue = jsonObject.getString("fw")
                             val firmwareReleaseDateValue =
-                                StringUtils().getLocaleFirmwareDate(jsonObject.getString("date"))
+                                StringUtils().getLocalFirmwareDate(jsonObject.getString("date"))
 
                             val firmwareVersion = getString(R.string.firmware_version)
                             val firmwareChangelogValue = "$firmwareVersion: $firmwareVersionValue"
 
                             if (prefs.getBoolean(i, false) == favorite) {
-                                firmwaresAdapter.addDevice(
-                                    FirmwaresData(
+                                feedAdapter.addDevice(
+                                    FeedData(
                                         deviceNameValue,
                                         deviceIconValue,
                                         firmwareReleaseDateValue,
@@ -144,7 +144,7 @@ class FeedFragment : Fragment() {
                                         i.toInt()
                                     )
                                 )
-                                firmwaresAdapter.notifyItemInserted(i.toInt())
+                                feedAdapter.notifyItemInserted(i.toInt())
                                 deviceListIndex[deviceNameValue] = i.toInt()
                             }
                         }
@@ -163,12 +163,12 @@ class FeedFragment : Fragment() {
 
         @SuppressLint("NotifyDataSetChanged")
         fun setData() {
-            firmwaresAdapter.clear()
-            firmwaresAdapter.notifyDataSetChanged()
+            feedAdapter.clear()
+            feedAdapter.notifyDataSetChanged()
             LoadDataForActivity().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
         }
 
-        if (FirmwaresAdapter().itemCount == 0) {
+        if (FeedAdapter().itemCount == 0) {
             setData()
         }
 
@@ -196,7 +196,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                firmwaresAdapter.filter.filter(newText)
+                feedAdapter.filter.filter(newText)
                 return false
             }
         })
@@ -204,7 +204,7 @@ class FeedFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        firmwaresAdapter.clear()
+        feedAdapter.clear()
     }
 
     private fun JSONObject.toMap(): Map<String, *> = keys().asSequence().associateWith { it ->

@@ -93,7 +93,7 @@ class FirmwareActivity : AppCompatActivity() {
             finish()
         }
         if (firmwareResponse.has("changeLog")) {
-            firmwareChangelogTextView.text = StringUtils().getChangelogFixed(
+            firmwareChangelogTextView.text = StringUtils().cleanChangelog(
                 firmwareResponse.getString("changeLog")
             )
         } else {

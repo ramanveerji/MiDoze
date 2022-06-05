@@ -4,34 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import io.github.keddnyo.midoze.R
+import io.github.keddnyo.midoze.databinding.ActivityResponseBinding
 import io.github.keddnyo.midoze.utils.StringUtils
-import io.github.keddnyo.midoze.utils.UiUtils
 
 class ResponseActivity : AppCompatActivity() {
-
-    private val context = this@ResponseActivity
+    private lateinit var binding: ActivityResponseBinding
     private var json: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_response)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding = ActivityResponseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         title = getString(R.string.settings_server_response)
 
-        if (intent.hasExtra("json")) {
-            val responseTextView: TextView = findViewById(R.id.response_text)
-            json = StringUtils().getExtrasFixed(intent.getStringExtra("json").toString())
-            responseTextView.text = json
-            responseTextView.requestFocus()
-        } else {
-            runOnUiThread {
-                UiUtils().showToast(context, getString(R.string.firmware_not_found))
-            }
-            finish()
-        }
+        val responseTextView = binding.responseText
+        json = StringUtils().cleanResponse(intent.getStringExtra("json").toString())
+        responseTextView.setText(json)
+        responseTextView.requestFocus()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -1,6 +1,6 @@
-package io.github.keddnyo.midoze.utils.firmwares
+package io.github.keddnyo.midoze.fragments.feed
 
-data class FirmwaresData(
+data class FeedData(
     val deviceName: String,
     val deviceIcon: Int,
     val firmwareReleaseDate: String,
