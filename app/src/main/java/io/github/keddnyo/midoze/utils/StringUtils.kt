@@ -22,7 +22,7 @@ class StringUtils {
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun getLocalFirmwareDate(firmwareDateString: String): String = with(Language().getCurrent()) {
+    fun getLocalFirmwareDate(firmwareDateString: String): String = with(Language().defaultLanguage) {
 
         val inputFormat = SimpleDateFormat("yyyy-MM-dd")
         val outputFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, this)

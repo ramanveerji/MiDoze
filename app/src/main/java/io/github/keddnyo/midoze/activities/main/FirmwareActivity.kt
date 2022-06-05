@@ -100,7 +100,7 @@ class FirmwareActivity : AppCompatActivity() {
             firmwareChangelogLayout.visibility = View.GONE
         }
         if (firmwareResponse.has("lang")) {
-            firmwareLanguagesTextView.text = Language().getName(
+            firmwareLanguagesTextView.text = Language().getLanguageList(
                 firmwareResponse.getString("lang")
             )
         }

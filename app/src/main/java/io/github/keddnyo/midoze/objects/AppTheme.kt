@@ -1,4 +1,4 @@
-package io.github.keddnyo.midoze
+package io.github.keddnyo.midoze.objects
 
 import androidx.appcompat.app.AppCompatDelegate
 

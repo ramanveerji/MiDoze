@@ -3,7 +3,7 @@ package io.github.keddnyo.midoze.utils
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager as PM
-import io.github.keddnyo.midoze.AppTheme
+import io.github.keddnyo.midoze.objects.AppTheme
 
 class AppTheme(context: Context) {
 
