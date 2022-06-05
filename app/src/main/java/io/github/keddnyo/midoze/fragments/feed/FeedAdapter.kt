@@ -14,11 +14,11 @@ import com.google.android.material.card.MaterialCardView
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.activities.main.FirmwareActivity
 import io.github.keddnyo.midoze.activities.request.RequestActivity
-import io.github.keddnyo.midoze.utils.MakeRequest
+import io.github.keddnyo.midoze.objects.RemoteJson
+import io.github.keddnyo.midoze.utils.Online
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import java.util.*
 
 class FeedAdapter : RecyclerView.Adapter<FeedAdapter.DeviceListViewHolder>(), Filterable {
@@ -73,8 +73,10 @@ class FeedAdapter : RecyclerView.Adapter<FeedAdapter.DeviceListViewHolder>(), Fi
             }
         }
 
+        val online = Online(holder.downloadLayout.context).getState()
+
         holder.downloadLayout.setOnClickListener {
-            when (MakeRequest().getOnlineState(holder.downloadLayout.context)) {
+            when (online) {
                 true -> {
                     openFirmwareActivity(feedDataArray[position].deviceIndex, holder.downloadLayout.context, false)
                 }
@@ -85,7 +87,7 @@ class FeedAdapter : RecyclerView.Adapter<FeedAdapter.DeviceListViewHolder>(), Fi
         }
 
         holder.downloadLayout.setOnLongClickListener {
-            when (MakeRequest().getOnlineState(holder.downloadLayout.context)) {
+            when (online) {
                 true -> {
                     openFirmwareActivity(feedDataArray[position].deviceIndex, holder.downloadLayout.context, true)
                 }
@@ -138,7 +140,7 @@ class FeedAdapter : RecyclerView.Adapter<FeedAdapter.DeviceListViewHolder>(), Fi
     private fun openFirmwareActivity(deviceIndex: Int, context: Context, custom: Boolean) {
         runBlocking {
             withContext(Dispatchers.IO) {
-                val jsonObject = JSONObject(MakeRequest().getApplicationValues())
+                val jsonObject = RemoteJson.QUERY_PARAMS
 
                 val deviceNameValue =
                     jsonObject.getJSONObject(deviceIndex.toString()).getString("name")

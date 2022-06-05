@@ -59,7 +59,7 @@ class FirmwareActivity : AppCompatActivity() {
         val appNameValue = intent.getStringExtra("appname").toString()
         val appVersionValue = intent.getStringExtra("appVersion").toString()
 
-        firmwareResponse = MakeRequest().getFirmwareLinks(
+        firmwareResponse = FirmwareRequest().getResponse(
             productionSourceValue,
             deviceSourceValue,
             appVersionValue,
@@ -87,13 +87,13 @@ class FirmwareActivity : AppCompatActivity() {
             )
         } else {
             runOnUiThread {
-                UiUtils().showToast(context, getString(R.string.firmware_not_found))
-                UiUtils().showToast(context, getString(R.string.firmware_try_switch_region))
+                Display().showToast(context, getString(R.string.firmware_not_found))
+                Display().showToast(context, getString(R.string.firmware_try_switch_region))
             }
             finish()
         }
         if (firmwareResponse.has("changeLog")) {
-            firmwareChangelogTextView.text = StringUtils().cleanChangelog(
+            firmwareChangelogTextView.text = Firmware().fixChangelog(
                 firmwareResponse.getString("changeLog")
             )
         } else {
@@ -126,7 +126,7 @@ class FirmwareActivity : AppCompatActivity() {
                 Download(context).getFirmwareFile(urlString, deviceName)
             }
         }
-        UiUtils().showToast(context, getString(R.string.downloading_toast))
+        Display().showToast(context, getString(R.string.downloading_toast))
     }
 
     private fun shareFirmware() {

@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.DisplayMetrics
 import android.widget.Toast
 
-class UiUtils {
+class Display {
 
-    fun getGridLayoutIndex(
+    fun getColumnCount(
         context: Context,
         columnWidthDp: Int,
     ): Int {

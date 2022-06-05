@@ -19,6 +19,8 @@ import io.github.keddnyo.midoze.activities.request.RequestActivity
 import io.github.keddnyo.midoze.databinding.ActivityMainBinding
 import io.github.keddnyo.midoze.fragments.FeedFragment
 import io.github.keddnyo.midoze.fragments.SettingsFragment
+import io.github.keddnyo.midoze.objects.PageViewer
+import io.github.keddnyo.midoze.objects.RemoteJson.APP_RELEASE_LATEST
 import io.github.keddnyo.midoze.utils.*
 import org.json.JSONObject
 
@@ -89,9 +91,9 @@ class MainActivity : AppCompatActivity() {
                 @Deprecated("Deprecated in Java")
                 override fun doInBackground(vararg p0: Void?): Void? {
                     if (prefs.getBoolean("settings_app_check_updates",
-                            true) && MakeRequest().getOnlineState(context)
+                            true) && Online(context).getState()
                     ) {
-                        releaseData = MakeRequest().getApplicationLatestReleaseInfo(context)
+                        releaseData = APP_RELEASE_LATEST
                     }
                     return null
                 }
@@ -120,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                                 builder.setPositiveButton(R.string.update_dialog_button) { _: DialogInterface?, _: Int ->
                                     Download(context).getFirmwareFile(latestVersionLink,
                                         getString(R.string.app_name))
-                                    UiUtils().showToast(context,
+                                    Display().showToast(context,
                                         getString(R.string.downloading_toast))
                                     DialogInterface.BUTTON_POSITIVE
                                 }
@@ -138,11 +140,17 @@ class MainActivity : AppCompatActivity() {
         } else {
             finish()
             startActivity(Intent(this, RequestActivity::class.java))
-            UiUtils().showToast(context, getString(R.string.compatibility_mode))
+            Display().showToast(context, getString(R.string.compatibility_mode))
         }
     }
 
     class MyAdapter(private val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+
+        private val tabNames = arrayOf(
+            PageViewer.TAB_FEED_TITLE,
+            PageViewer.TAB_SETTINGS_TITLE
+        )
+
         override fun getCount(): Int {
             return 2
         }
@@ -156,8 +164,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun getPageTitle(position: Int): CharSequence {
-            return context.resources.getString(StringUtils().tabTitles[position])
+            return context.resources.getString(tabNames[position])
         }
+
     }
 
     override fun onBackPressed() {

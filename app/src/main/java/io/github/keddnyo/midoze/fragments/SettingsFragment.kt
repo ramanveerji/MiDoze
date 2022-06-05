@@ -1,7 +1,6 @@
 package io.github.keddnyo.midoze.fragments
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,6 +13,7 @@ import androidx.preference.PreferenceManager
 import io.github.keddnyo.midoze.BuildConfig
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.activities.request.RequestActivity
+import io.github.keddnyo.midoze.objects.WebIntents
 import io.github.keddnyo.midoze.utils.AppTheme
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -47,15 +47,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             about.setOnPreferenceClickListener {
                 startActivity(
-                    Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Keddnyo/MiDoze"))
+                    WebIntents.PROJECT
                 )
                 true
             }
 
             cloud.setOnPreferenceClickListener {
                 startActivity(
-                    Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://4pda.to/forum/index.php?showuser=243484"))
+                    WebIntents.SCHAKAL
                 )
                 true
             }

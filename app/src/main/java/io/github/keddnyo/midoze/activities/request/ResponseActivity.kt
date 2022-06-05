@@ -7,7 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.databinding.ActivityResponseBinding
-import io.github.keddnyo.midoze.utils.StringUtils
+import io.github.keddnyo.midoze.utils.Firmware
 
 class ResponseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResponseBinding
@@ -22,7 +22,7 @@ class ResponseActivity : AppCompatActivity() {
         title = getString(R.string.settings_server_response)
 
         val responseTextView = binding.responseText
-        json = StringUtils().cleanResponse(intent.getStringExtra("json").toString())
+        json = Firmware().fixResponse(intent.getStringExtra("json").toString())
         responseTextView.setText(json)
         responseTextView.requestFocus()
     }

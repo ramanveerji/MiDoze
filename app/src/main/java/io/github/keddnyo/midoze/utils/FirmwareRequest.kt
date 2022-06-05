@@ -2,71 +2,53 @@ package io.github.keddnyo.midoze.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.net.Uri
 import androidx.preference.PreferenceManager
-import io.github.keddnyo.midoze.R
+import io.github.keddnyo.midoze.objects.RequestHosts
+import io.github.keddnyo.midoze.objects.ResponseValues.COUNTRY_CHINA
+import io.github.keddnyo.midoze.objects.ResponseValues.COUNTRY_RUSSIA
+import io.github.keddnyo.midoze.objects.ResponseValues.COUNTRY_UAE
+import io.github.keddnyo.midoze.objects.ResponseValues.COUNTRY_US
+import io.github.keddnyo.midoze.objects.ResponseValues.LANGUAGE_CHINA
+import io.github.keddnyo.midoze.objects.ResponseValues.LANGUAGE_ENGLISH
+import io.github.keddnyo.midoze.objects.ResponseValues.LANGUAGE_RUSSIA
+import io.github.keddnyo.midoze.objects.ResponseValues.LANGUAGE_UAE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
-import java.net.URL
 
-class MakeRequest {
-    fun getOnlineState(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val info = connectivityManager.allNetworkInfo
-        for (i in info.indices) {
-            if (info[i].state == NetworkInfo.State.CONNECTED) {
-                return true
-            }
-        }
-        return false
-    }
+class FirmwareRequest {
 
-    fun getFirmwareLatest(): JSONObject {
-        return JSONObject(URL("https://schakal.ru/fw/latest.json").readText())
-    }
-
-    fun getApplicationValues(): String {
-        return URL("https://schakal.ru/fw/dev_apps.json").readText()
-    }
-
-    fun getApplicationLatestReleaseInfo(context: Context): JSONObject {
-        val appName = context.getString(R.string.app_name)
-        return JSONObject(URL("https://api.github.com/repos/keddnyo/$appName/releases/latest").readText())
-    }
-
-    suspend fun getFirmwareLinks(
+    suspend fun getResponse(
         productionSource: String,
         deviceSource: String,
         appVersion: String,
         appName: String,
         context: Context,
     ): JSONObject = with(context) {
+
         val prefs: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context)
 
         val country = when (prefs.getString("settings_request_region", "1")) {
-            "2" -> "CH"
-            "3" -> "RU"
-            "4" -> "AR"
-            else -> "US"
+            "2" -> COUNTRY_CHINA
+            "3" -> COUNTRY_RUSSIA
+            "4" -> COUNTRY_UAE
+            else -> COUNTRY_US
         }
         val lang = when (prefs.getString("settings_request_region", "1")) {
-            "2" -> "zh_CH"
-            "3" -> "ru_RU"
-            "4" -> "ar_AR"
-            else -> "en_US"
+            "2" -> LANGUAGE_CHINA
+            "3" -> LANGUAGE_RUSSIA
+            "4" -> LANGUAGE_UAE
+            else -> LANGUAGE_ENGLISH
         }
 
         val requestHost = when (prefs.getString("settings_request_host", "1")) {
-            "2" -> getString(R.string.request_host_second)
-            "3" -> getString(R.string.request_host_third)
-            else -> getString(R.string.request_host_first)
+            "2" -> getString(RequestHosts.SECOND)
+            "3" -> getString(RequestHosts.THIRD)
+            else -> getString(RequestHosts.FIRST)
         }
 
         val uriBuilder: Uri.Builder = Uri.Builder()

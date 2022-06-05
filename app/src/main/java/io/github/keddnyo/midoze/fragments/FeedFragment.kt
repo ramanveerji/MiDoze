@@ -16,11 +16,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.github.keddnyo.midoze.R
-import io.github.keddnyo.midoze.utils.MakeRequest
-import io.github.keddnyo.midoze.utils.StringUtils
-import io.github.keddnyo.midoze.utils.UiUtils
 import io.github.keddnyo.midoze.fragments.feed.FeedAdapter
 import io.github.keddnyo.midoze.fragments.feed.FeedData
+import io.github.keddnyo.midoze.objects.RemoteJson
+import io.github.keddnyo.midoze.utils.Date
+import io.github.keddnyo.midoze.utils.Online
+import io.github.keddnyo.midoze.utils.Display
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -52,7 +53,8 @@ class FeedFragment : Fragment() {
 
         deviceListRecyclerView = findViewById(R.id.deviceListRecyclerView)
         deviceListRecyclerView.layoutManager =
-            GridLayoutManager(this, UiUtils().getGridLayoutIndex(this, 400))
+            GridLayoutManager(this, Display()
+                .getColumnCount(this, 400))
 
         val adapter = feedAdapter
         deviceListRecyclerView.adapter = adapter
@@ -75,13 +77,11 @@ class FeedFragment : Fragment() {
             @Deprecated("Deprecated in Java")
             override fun doInBackground(vararg p0: Void?): Void? {
 
-                fun getOnlineState(): Boolean {
-                    return MakeRequest().getOnlineState(context)
-                }
+                val online = Online(requireContext()).getState()
 
                 fun getFirmwaresData() {
-                    if (getOnlineState()) {
-                        firmwaresData = MakeRequest().getFirmwareLatest()
+                    if (online) {
+                        firmwaresData = RemoteJson.FIRMWARE_LATEST
                         editor.putString("Firmwares", firmwaresData.toString())
                         editor.apply()
                     } else {
@@ -129,7 +129,7 @@ class FeedFragment : Fragment() {
                             }
                             val firmwareVersionValue = jsonObject.getString("fw")
                             val firmwareReleaseDateValue =
-                                StringUtils().getLocalFirmwareDate(jsonObject.getString("date"))
+                                Date().format(jsonObject.getString("date"))
 
                             val firmwareVersion = getString(R.string.firmware_version)
                             val firmwareChangelogValue = "$firmwareVersion: $firmwareVersionValue"

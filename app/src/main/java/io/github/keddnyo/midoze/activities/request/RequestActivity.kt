@@ -8,8 +8,8 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import io.github.keddnyo.midoze.R
-import io.github.keddnyo.midoze.utils.MakeRequest
-import io.github.keddnyo.midoze.utils.UiUtils
+import io.github.keddnyo.midoze.utils.FirmwareRequest
+import io.github.keddnyo.midoze.utils.Display
 import kotlinx.coroutines.runBlocking
 
 class RequestActivity : AppCompatActivity() {
@@ -65,10 +65,10 @@ class RequestActivity : AppCompatActivity() {
         }
 
         submitButton.setOnClickListener {
-            if (MakeRequest().getOnlineState(context)) {
+            if (FirmwareRequest().getOnlineState(context)) {
                 val firmwareResponse =
                     runBlocking {
-                        MakeRequest().getFirmwareLinks(
+                        FirmwareRequest().getResponse(
                             extrasProductionSourceEditText.text.toString(),
                             extrasDeviceSourceEditText.text.toString(),
                             extrasAppVersionEditText.text.toString(),
@@ -81,7 +81,7 @@ class RequestActivity : AppCompatActivity() {
                 intent.putExtra("json", firmwareResponse.toString())
                 startActivity(intent)
             } else {
-                UiUtils().showToast(context, getString(R.string.firmware_connectivity_error))
+                Display().showToast(context, getString(R.string.firmware_connectivity_error))
             }
         }
 
