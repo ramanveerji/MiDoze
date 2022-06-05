@@ -10,6 +10,7 @@ import com.google.android.material.textfield.TextInputEditText
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.utils.FirmwareRequest
 import io.github.keddnyo.midoze.utils.Display
+import io.github.keddnyo.midoze.utils.Online
 import kotlinx.coroutines.runBlocking
 
 class RequestActivity : AppCompatActivity() {
@@ -65,7 +66,7 @@ class RequestActivity : AppCompatActivity() {
         }
 
         submitButton.setOnClickListener {
-            if (FirmwareRequest().getOnlineState(context)) {
+            if (Online(context).getState()) {
                 val firmwareResponse =
                     runBlocking {
                         FirmwareRequest().getResponse(
