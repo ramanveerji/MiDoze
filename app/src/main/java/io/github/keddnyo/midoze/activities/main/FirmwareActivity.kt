@@ -2,8 +2,11 @@ package io.github.keddnyo.midoze.activities.main
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
+import android.webkit.URLUtil
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.File
 
 class FirmwareActivity : AppCompatActivity() {
 
@@ -45,13 +49,17 @@ class FirmwareActivity : AppCompatActivity() {
     }
 
     private suspend fun init() = withContext(Dispatchers.IO) {
+        val fileLinks = arrayListOf<String>()
+
         val deviceNameTextView: TextView = findViewById(R.id.deviceNameTextView)
         val deviceIconTextView: ImageView = findViewById(R.id.deviceIconImageView)
         val firmwareVersionTextView: TextView = findViewById(R.id.firmwareVersionTextView)
         val firmwareChangelogTextView: TextView = findViewById(R.id.firmwareChangelogTextView)
         val firmwareChangelogLayout: MaterialCardView = findViewById(R.id.firmware_changelog_layout)
         val firmwareLanguagesTextView: TextView = findViewById(R.id.firmwareLanguagesTextView)
-        val firmwareDownloadButton: Button = findViewById(R.id.firmwareDownloadButton)
+        val firmwareInstallButton: Button = findViewById(R.id.firmwareInstallButton)
+        val firmwareDownload: ImageView = findViewById(R.id.firmwareDownload)
+        val firmwareShare: ImageView = findViewById(R.id.firmwareShare)
 
         deviceNameValue = intent.getStringExtra("deviceName").toString()
         val deviceSourceValue = intent.getIntExtra("deviceSource", 0).toString()
@@ -105,14 +113,73 @@ class FirmwareActivity : AppCompatActivity() {
             )
         }
 
-        firmwareDownloadButton.setOnClickListener {
+        val packageManager = context.packageManager
+
+        runOnUiThread {
+            firmwareInstallButton.isEnabled = PackageManager().isPackageInstalled("com.mc.miband1", packageManager) || PackageManager().isPackageInstalled("com.mc.amazfit1", packageManager)
+        }
+
+        firmwareInstallButton.setOnClickListener {
+            /*val packageManager = context.packageManager
+            if (deviceNameValue.contains("Mi Band",
+                    true) && PackageManager().isPackageInstalled("com.mc.miband1", packageManager)
+            ) {
+
+            } else if ((deviceNameValue.contains("Amazfit",
+                    true) || deviceNameValue.contains("Amazfit",
+                    true)) && PackageManager().isPackageInstalled("com.mc.amazfit1", packageManager)
+            ) {
+
+            }*/
+
+            for (i in responseFirmwareTagsArray) {
+                if (firmwareResponse.has(i)) {
+                    fileLinks.add(firmwareResponse.getString(i))
+                }
+            }
+
+            sendArchive(fileLinks)
+        }
+
+        firmwareDownload.setOnClickListener {
             getFirmware(firmwareResponse, context, deviceNameValue)
         }
 
-        firmwareDownloadButton.setOnLongClickListener {
+        firmwareShare.setOnLongClickListener {
             shareFirmware()
             true
         }
+    }
+
+    private fun sendArchive(fileLinks: ArrayList<String>) {
+        val filesNames = arrayListOf<File>()
+
+        val filePath = context.filesDir
+
+        for (i in fileLinks) {
+            val fileName = URLUtil.guessFileName (i, "?", "?")
+
+            filesNames.add(File(filePath, fileName))
+
+            Thread {
+                Download(context).getFirmwareFile(i, "_tmp")
+            }
+            Thread {
+                File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)}/MiDoze/_tmp", fileName).let { sourceFile ->
+                    sourceFile.copyTo(File(filePath, fileName))
+                    sourceFile.delete()
+                }
+            }
+        }
+
+        Thread {
+            FileManager(filePath).zip(filesNames)
+        }
+
+
+        val outputZipFile = FileManager(filePath).outputZipFile
+
+        installZipFirmware(outputZipFile)
     }
 
     private fun getFirmware(
@@ -148,5 +215,11 @@ class FirmwareActivity : AppCompatActivity() {
 
         val shareIntent = Intent.createChooser(sendIntent, deviceNameValue)
         startActivity(shareIntent)
+    }
+
+    private fun installZipFirmware(filePath: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(Uri.fromFile(File(filePath)), "application/zip")
+        startActivity(Intent.createChooser(intent,"Open File..."))
     }
 }

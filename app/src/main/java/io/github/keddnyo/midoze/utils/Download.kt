@@ -48,6 +48,9 @@ class Download(context: Context) {
                 Environment.DIRECTORY_DOWNLOADS,
                 "${getString(R.string.app_name)}/$subName/$fileName"
             )
+            /*request.setDestinationInExternalFilesDir(
+                downloadContext, filesDir.toString(), ""
+            )*/
 
             downloadManager.enqueue(request)
         }
