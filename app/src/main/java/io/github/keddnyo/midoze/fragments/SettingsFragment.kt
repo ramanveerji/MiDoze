@@ -62,14 +62,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Unit = with(requireContext()) {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-
         val settingsItem = menu.findItem(R.id.action_dark_mode)
-        settingsItem.icon = if (prefs.getBoolean("settings_dark_mode", false)) {
+
+        settingsItem.icon = if (AppTheme(requireContext()).isDarkMode()) {
             ContextCompat.getDrawable(this, R.drawable.ic_light_mode)
         } else {
             ContextCompat.getDrawable(this, R.drawable.ic_dark_mode)
         }
+
         return super.onPrepareOptionsMenu(menu)
     }
 

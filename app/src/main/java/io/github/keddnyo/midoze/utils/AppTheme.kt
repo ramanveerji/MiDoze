@@ -9,17 +9,17 @@ class AppTheme(context: Context) {
 
     private val sp = PM.getDefaultSharedPreferences(context)
 
-    private val isDarkMode = sp.getBoolean(AppTheme.SETTING_MODE_DARK, false)
+    fun isDarkMode(): Boolean = sp.getBoolean(AppTheme.SETTING_MODE_DARK, false)
 
-    private val themeIndex = if (isDarkMode) AppTheme.LIGHT else AppTheme.NIGHT
+    private fun themeIndex() = if (isDarkMode()) AppTheme.NIGHT else AppTheme.LIGHT
 
     fun setTheme() {
-        AppCompatDelegate.setDefaultNightMode(themeIndex)
+        AppCompatDelegate.setDefaultNightMode(themeIndex())
     }
 
     fun swapTheme() {
-        sp.edit().putBoolean(AppTheme.SETTING_MODE_DARK, !isDarkMode).apply()
-        setTheme()
+        sp.edit().putBoolean(AppTheme.SETTING_MODE_DARK, !isDarkMode()).apply()
+        AppCompatDelegate.setDefaultNightMode(themeIndex())
     }
 
 }
