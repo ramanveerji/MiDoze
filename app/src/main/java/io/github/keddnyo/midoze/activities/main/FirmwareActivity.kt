@@ -11,7 +11,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import com.google.android.material.card.MaterialCardView
+import io.github.keddnyo.midoze.BuildConfig
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.utils.*
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +21,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
+
 
 class FirmwareActivity : AppCompatActivity() {
 
@@ -176,8 +179,15 @@ class FirmwareActivity : AppCompatActivity() {
             FileManager(filePath).zip(filesNames)
         }
 
+        Thread {
+            File(filePath, "archive.zip").let { sourceFile ->
+                sourceFile.copyTo(File(filePath, "archive.bin"))
+                sourceFile.delete()
+            }
+        }
 
-        val outputZipFile = FileManager(filePath).outputZipFile
+
+        val outputZipFile = File(filePath, "archive.bin").toString()
 
         installZipFirmware(outputZipFile)
     }
@@ -219,7 +229,11 @@ class FirmwareActivity : AppCompatActivity() {
 
     private fun installZipFirmware(filePath: String) {
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(Uri.fromFile(File(filePath)), "application/zip")
+        val data = FileProvider.getUriForFile(context,
+            BuildConfig.APPLICATION_ID + ".provider",
+            File(filePath))
+        intent.setDataAndType(data, "application/octet-stream")
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(intent,"Open File..."))
     }
 }
