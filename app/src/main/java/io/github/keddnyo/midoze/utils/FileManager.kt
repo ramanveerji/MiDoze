@@ -6,9 +6,9 @@ import java.util.zip.ZipOutputStream
 
 class FileManager(outputDir: File) {
 
-    val outputZipFile = "${outputDir}/archive.zip"
+    val outputZipFile = File("${outputDir}/MiDoze/_tmp", "archive.zip")
 
-    /*fun createZip(files: ArrayList<String>) {
+    fun createZip(files: ArrayList<String>) {
         runCatching {
             ZipOutputStream(BufferedOutputStream(FileOutputStream(outputZipFile))).use { out ->
                 val data = ByteArray(1024)
@@ -31,9 +31,9 @@ class FileManager(outputDir: File) {
         }.onFailure { _ ->
             // exception.printStackTrace()
         }
-    }*/
+    }
 
-    @Throws(IOException::class)
+    /*@Throws(IOException::class)
     fun zip(files: ArrayList<File>) {
         val bufferSize = 2048
         var origin: BufferedInputStream? = null
@@ -58,5 +58,5 @@ class FileManager(outputDir: File) {
         } finally {
             out.close()
         }
-    }
+    }*/
 }
