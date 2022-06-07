@@ -11,9 +11,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import com.google.android.material.card.MaterialCardView
-import io.github.keddnyo.midoze.BuildConfig
 import io.github.keddnyo.midoze.R
 import io.github.keddnyo.midoze.utils.*
 import kotlinx.coroutines.*
@@ -203,7 +203,7 @@ class FirmwareActivity : AppCompatActivity() {
     }
 
     fun sendZip() {
-        val outputZipFile = File("/storage/emulated/0/Download/MiDoze/_tmp/archive.bin")
+        val outputZipFile = File(File("/storage/emulated/0/Download/MiDoze/_tmp").path, "archive.bin")
         installZipFirmware(outputZipFile)
     }
 
@@ -277,9 +277,21 @@ class FirmwareActivity : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(intent,"Open File..."))*/
 
+        val uri: Uri = FileProvider.getUriForFile(this, "io.github.keddnyo.midoze.provider", filePath)
+
+        val intent = ShareCompat.IntentBuilder.from(this)
+            .setStream(uri) // uri from FileProvider
+            .setType("application/octet-stream")
+            .intent
+            .setAction(Intent.ACTION_VIEW) //Change if needed
+            .setDataAndType(uri, "application/octet-stream")
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+        startActivity(intent)
 
 
-        val intentShare = Intent(Intent.ACTION_VIEW)
+
+        /*val intentShare = Intent(Intent.ACTION_VIEW)
         intentShare.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         val mimeType = "application/octet-stream"  // The file here is the nativescript file object (fs.File)
         val context = this@FirmwareActivity
@@ -288,6 +300,6 @@ class FirmwareActivity : AppCompatActivity() {
             filePath) // Here add ".provider" after your app package name
         intentShare.setDataAndType(uri, mimeType);
         intentShare.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(Intent.createChooser(intentShare, "Open File..."))
+        startActivity(Intent.createChooser(intentShare, "Open File..."))*/
     }
 }
