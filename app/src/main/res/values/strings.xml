@@ -20,8 +20,8 @@
     <string name="extras_production_source">Production source</string>
     <string name="extras_app_name">App package name</string>
     <string name="extras_app_version">App version</string>
-    <string name="extras_app_country">Country</string>
-    <string name="extras_app_lang">Language</string>
+    <string name="extras_app_country">Country code</string>
+    <string name="extras_app_lang">Language code</string>
     <string name="extras_app_data">Insert app data</string>
     <string name="extras_import_button">Import</string>
 

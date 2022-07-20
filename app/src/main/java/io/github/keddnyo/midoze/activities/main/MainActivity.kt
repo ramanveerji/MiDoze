@@ -39,20 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportActionBar?.subtitle = Display().getAppVersion(context)
 
-        if (android.os.Build.VERSION.SDK_INT >= 21) {
-            prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            setContentView(R.layout.activity_main)
-
-            if (DozeRequest().isOnline(context)) {
-                AppUpdates(context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-            }
-
-            init()
-        } else {
-            finish()
-            startActivity(Intent(this, RequestActivity::class.java))
-            Display().showToast(context, getString(R.string.compatibility_mode))
-        }
+        setContentView(R.layout.activity_main)
+        init()
     }
 
     private fun init() {
